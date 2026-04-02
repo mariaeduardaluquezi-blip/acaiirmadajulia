@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema Loja de Açaí</title>
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#f3e8ff;
+  margin:0;
+  padding:20px;
+}
+
+h1{
+  color:#4c1d95;
+}
+
+.card{
+  background:white;
+  border:2px solid #c4b5fd;
+  border-radius:10px;
+  padding:15px;
+  margin-top:20px;
+}
+
+input{
+  padding:8px;
+  margin-right:5px;
+}
+
+button{
+  background:#6d28d9;
+  color:white;
+  border:none;
+  padding:8px 12px;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#5b21b6;
+}
+
+.delete{
+  background:#ef4444;
+}
+
+.delete:hover{
+  background:#dc2626;
+}
+
+.lista-item{
+  display:flex;
+  justify-content:space-between;
+  margin-top:8px;
+  padding:6px;
+  background:#fafafa;
+  border-radius:6px;
+}
+
+.estoque-item{
+  display:flex;
+  justify-content:space-between;
+  margin-top:8px;
+}
+</style>
+</head>
+<body>
+
+<h1>Sistema da Loja de Açaí</h1>
+
+<div class="card">
+<h2>Novo Pedido (Balcão / WhatsApp)</h2>
+<input id="cliente" placeholder="Nome do cliente">
+<input id="valor" type="number" placeholder="Valor">
+<button onclick="adicionarPedido()">Adicionar</button>
+</div>
+
+<div class="card">
+<h2>Controle de Vendas</h2>
+<p>Total vendido: R$ <span id="totalVendas">0</span></p>
+<div id="listaPedidos"></div>
+</div>
+
+<div class="card">
+<h2>Pedidos via 99</h2>
+<input id="cliente99" placeholder="Nome do cliente">
+<input id="valor99" type="number" placeholder="Valor">
+<button onclick="adicionarPedido99()">Adicionar</button>
+
+<p>Total vendido pela 99: R$ <span id="totalVendas99">0</span></p>
+<div id="listaPedidos99"></div>
+</div>
+
+<div class="card">
+<h2>Estoque (Manual)</h2>
+<div id="estoque"></div>
+</div>
+
+<script>
+let pedidos = [];
+let pedidos99 = [];
+
+let estoque = [
+"Garrafa 300ml",
+"Garrafa 500ml",
+"Paçoca",
+"Granola",
+"Nutella",
+"Banana",
+"Morango",
+"Leite condensado",
+"Leite em pó",
+"Sucrilhos",
+"Confete",
+"Oreo",
+"Ovomaltine",
+"Creme de paçoca",
+"Creme de maracujá"
+];
+
+function adicionarPedido(){
+  const cliente = document.getElementById("cliente").value;
+  const valor = Number(document.getElementById("valor").value);
+
+  if(!cliente || !valor) return;
+
+  pedidos.push({cliente,valor,data:new Date().toLocaleDateString()});
+
+  document.getElementById("cliente").value="";
+  document.getElementById("valor").value="";
+
+  atualizarPedidos();
+}
+
+function adicionarPedido99(){
+  const cliente = document.getElementById("cliente99").value;
+  const valor = Number(document.getElementById("valor99").value);
+
+  if(!cliente || !valor) return;
+
+  pedidos99.push({cliente,valor,data:new Date().toLocaleDateString()});
+
+  document.getElementById("cliente99").value="";
+  document.getElementById("valor99").value="";
+
+  atualizarPedidos99();
+}
+
+function excluirPedido(i){
+  pedidos.splice(i,1);
+  atualizarPedidos();
+}
+
+function excluirPedido99(i){
+  pedidos99.splice(i,1);
+  atualizarPedidos99();
+}
+
+function atualizarPedidos(){
+  const lista = document.getElementById("listaPedidos");
+  lista.innerHTML="";
+
+  let tota
